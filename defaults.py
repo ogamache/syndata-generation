@@ -1,11 +1,11 @@
 # Paths
 # Fill this according to own setup
-BACKGROUND_DIR = 'demo_data_dir/backgrounds/'
-BACKGROUND_GLOB_STRING = '*.png'
-POISSON_BLENDING_DIR = '/usr1/debidatd/pb'
-SELECTED_LIST_FILE = 'demo_data_dir/selected.txt'
-DISTRACTOR_LIST_FILE = 'demo_data_dir/neg_list.txt' 
-DISTRACTOR_DIR = 'demo_data_dir/distractor_objects_dir/'
+BACKGROUND_DIR = 'input/backgrounds/'
+BACKGROUND_GLOB_STRING = '*.jpg'
+POISSON_BLENDING_DIR = './pb'
+SELECTED_LIST_FILE = 'input/selected.txt'
+DISTRACTOR_LIST_FILE = 'input/neg_list.txt' 
+DISTRACTOR_DIR = 'input/distractor_objects_dir/'
 DISTRACTOR_GLOB_STRING = '*.jpg'
 INVERTED_MASK = True # Set to true if white pixels represent background
 
@@ -15,9 +15,9 @@ BLENDING_LIST = ['gaussian','poisson', 'none', 'box', 'motion']
 
 # Parameters for images
 MIN_NO_OF_OBJECTS = 1
-MAX_NO_OF_OBJECTS = 4
-MIN_NO_OF_DISTRACTOR_OBJECTS = 2
-MAX_NO_OF_DISTRACTOR_OBJECTS = 4
+MAX_NO_OF_OBJECTS = 3
+MIN_NO_OF_DISTRACTOR_OBJECTS = 0
+MAX_NO_OF_DISTRACTOR_OBJECTS = 0
 WIDTH = 640
 HEIGHT = 480
 MAX_ATTEMPTS_TO_SYNTHESIZE = 20
