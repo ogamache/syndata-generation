@@ -89,6 +89,6 @@ ENV/
 .ropeproject
 
 # Folders
-venv_syndata/
+venv-syndata/
 pb/
 input/
