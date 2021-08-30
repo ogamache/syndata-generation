@@ -92,3 +92,4 @@ ENV/
 venv-syndata/
 pb/
 input/
+output/
