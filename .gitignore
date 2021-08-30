@@ -87,3 +87,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Folders
+venv_syndata/
+pb/
+input/
