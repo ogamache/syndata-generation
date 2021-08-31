@@ -91,5 +91,6 @@ ENV/
 # Folders
 venv-syndata/
 pb/
+voc2coco/
 input/
 output/
