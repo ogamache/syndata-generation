@@ -182,7 +182,8 @@ def write_imageset_file(exp_dir, img_files, anno_files):
     '''
     with open(os.path.join(exp_dir,'train.txt'),'w') as f:
         for i in range(len(img_files)):
-            f.write('%s %s\n'%(img_files[i], anno_files[i]))
+            #f.write('%s %s\n'%(img_files[i], anno_files[i]))
+            f.write('%s\n'%anno_files[i])
 
 def write_labels_file(exp_dir, labels):
     '''Writes the labels file which has the name of an object on each line
@@ -192,10 +193,12 @@ def write_labels_file(exp_dir, labels):
                          files will be stored
         labels(list): List of labels. This will be useful while training an object detector
     '''
-    unique_labels = ['__background__'] + sorted(set(labels))
+    #unique_labels = ['__background__'] + sorted(set(labels))
+    unique_labels = sorted(set(labels))
     with open(os.path.join(exp_dir,'labels.txt'),'w') as f:
         for i, label in enumerate(unique_labels):
-            f.write('%s %s\n'%(i, label))
+            #f.write('%s %s\n'%(i, label))
+            f.write('%s\n'%(label))
 
 def keep_selected_labels(img_files, labels):
     '''Filters image files and labels to only retain those that are selected. Useful when one doesn't 
@@ -261,8 +264,8 @@ def create_image_anno(objects, distractor_objects, img_file, anno_file, bg_file,
         blending_list(list): List of blending modes to synthesize for each image
         dontocclude(bool): Generate images with occlusion
     '''
-    if 'none' not in img_file:
-        return 
+    #if 'none' not in img_file:
+    #    return 
     
     print("Working on %s" % img_file)
     if os.path.exists(anno_file):
@@ -272,6 +275,20 @@ def create_image_anno(objects, distractor_objects, img_file, anno_file, bg_file,
     assert len(all_objects) > 0
     while True:
         top = Element('annotation')
+        object_folder = SubElement(top, 'folder')
+        object_folder.text = "images"
+        object_filename = SubElement(top, 'filename')
+        object_filename.text = str(img_file[img_file.rfind('/') + 1:])
+        object_path = SubElement(top, 'path')
+        object_path.text = str(img_file)
+        object_size = SubElement(top, 'size')
+        size_width = SubElement(object_size, 'width')
+        size_width.text = str(WIDTH)
+        size_height = SubElement(object_size, 'height')
+        size_height.text = str(HEIGHT)
+        size_depth = SubElement(object_size, 'depth')
+        size_depth.text = "3"
+
         background = Image.open(bg_file)
         background = background.resize((w, h), Image.ANTIALIAS)
         backgrounds = []
@@ -353,7 +370,7 @@ def create_image_anno(objects, distractor_objects, img_file, anno_file, bg_file,
                elif blending_list[i] == 'box':
                   backgrounds[i].paste(foreground, (x, y), Image.fromarray(cv2.blur(PIL2array1C(mask),(3,3))))
            if idx >= len(objects):
-               continue 
+               continue
            object_root = SubElement(top, 'object')
            object_type = obj[1]
            object_type_entry = SubElement(object_root, 'name')
@@ -377,6 +394,7 @@ def create_image_anno(objects, distractor_objects, img_file, anno_file, bg_file,
         if blending_list[i] == 'motion':
             backgrounds[i] = LinearMotionBlur3C(PIL2array3C(backgrounds[i]))
         backgrounds[i].save(img_file.replace('none', blending_list[i]))
+
 
     xmlstr = xml.dom.minidom.parseString(tostring(top)).toprettyxml(indent="    ")
     with open(anno_file, "w") as f:
@@ -441,7 +459,7 @@ def gen_syn_data(img_files, labels, img_dir, anno_dir, scale_augment, rotation_a
         bg_file = random.choice(background_files)
         for blur in BLENDING_LIST:
             img_file = os.path.join(img_dir, '%i_%s.png'%(idx,blur))
-            anno_file = os.path.join(anno_dir, '%i.xml'%idx)
+            anno_file = os.path.join(anno_dir, '%i_%s.xml'%(idx,blur))
             params = (objects, distractor_objects, img_file, anno_file, bg_file)
             params_list.append(params)
             img_files.append(img_file)
