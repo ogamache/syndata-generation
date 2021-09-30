@@ -10,6 +10,7 @@ import random
 from PIL import Image
 import PIL.ImageOps
 import scipy
+import imageio
 from multiprocessing import Pool
 from functools import partial
 import signal
@@ -139,6 +140,9 @@ def get_annotation_from_mask_file(mask_file, scale=1.0):
     '''
     if os.path.exists(mask_file):
         mask = cv2.imread(mask_file)
+        #mask = imageio.imread(mask_file)
+        #mask = Image.open(mask_file)
+        #mask = cv2.cvtColor(np.array(mask), cv2.COLOR_RGB2BGR)
         if INVERTED_MASK:
             mask = 255 - mask
         rows = np.any(mask, axis=1)
@@ -240,6 +244,7 @@ def PIL2array3C(img):
     Returns:
         NumPy Array: Converted image
     '''
+    img = img.convert("RGB")
     return np.array(img.getdata(),
                     np.uint8).reshape(img.size[1], img.size[0], 3)
 
@@ -267,7 +272,7 @@ def create_image_anno(objects, distractor_objects, img_file, anno_file, bg_file,
     #if 'none' not in img_file:
     #    return 
     
-    print("Working on %s" % img_file)
+    #print("Working on %s" % img_file)
     if os.path.exists(anno_file):
         return anno_file
     
@@ -458,7 +463,7 @@ def gen_syn_data(img_files, labels, img_dir, anno_dir, scale_augment, rotation_a
         idx += 1
         bg_file = random.choice(background_files)
         for blur in BLENDING_LIST:
-            img_file = os.path.join(img_dir, '%i_%s.png'%(idx,blur))
+            img_file = os.path.join(img_dir, '%i_%s.jpeg'%(idx,blur))
             anno_file = os.path.join(anno_dir, '%i_%s.xml'%(idx,blur))
             params = (objects, distractor_objects, img_file, anno_file, bg_file)
             params_list.append(params)

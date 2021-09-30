@@ -2,4 +2,5 @@ opencv-python
 pillow
 pyblur
 tqdm
+imageio
 
